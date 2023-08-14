@@ -173,10 +173,10 @@ public class ManagerService : ManagementService<Manager>, IManagerService
 
     private static ProjectType? Parse(ProjectTypeVm projectTypeVm) => projectTypeVm switch
     {
-        ProjectTypeVm.Mb => ProjectType.Mb,
-        ProjectTypeVm.Py => ProjectType.Py,
-        ProjectTypeVm.Wb => ProjectType.Wb,
-        ProjectTypeVm.Ot => ProjectType.Ot,
+        ProjectTypeVm.Mb => ProjectType.MB,
+        ProjectTypeVm.Py => ProjectType.PY,
+        ProjectTypeVm.Wb => ProjectType.WB,
+        ProjectTypeVm.Ot => ProjectType.OT,
         ProjectTypeVm.All => null,
         _ => null,
     };

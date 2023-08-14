@@ -4,21 +4,21 @@ namespace MITT.Services.Abstracts;
 
 public interface ITaskService
 {
-    Task<List<TaskVm>> Tasks(string projectId, string developerId, bool activeOnly = true, CancellationToken cancellationToken = default);
+    Task<List<TaskVm>> Tasks(string projectId, string developerId, TaskState? taskState, CancellationToken cancellationToken = default);
 
     Task<List<TaskNamesVm>> TaskNames(CancellationToken cancellationToken = default);
 
     Task<OperationResult> AddTask(TaskDto taskDto, CancellationToken cancellationToken = default);
 
     Task<OperationResult> CompleteTask(CompleteTaskDto completeTaskDto, CancellationToken cancellationToken = default);
+
     Task<OperationResult> CancelTask(CancelTaskDto cancelTaskDto, CancellationToken cancellationToken = default);
 }
 
-public class CompleteTaskDto: CancelTaskDto
+public class CompleteTaskDto : CancelTaskDto
 {
     public string CommitTag { get; set; }
 }
-
 
 public class CancelTaskDto
 {
@@ -26,8 +26,6 @@ public class CancelTaskDto
     public string TaskId { get; set; }
     public string Message { get; set; }
 }
-
-
 
 public class AssignTaskDto
 {

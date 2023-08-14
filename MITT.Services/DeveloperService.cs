@@ -70,7 +70,7 @@ public class DeveloperService : ManagementService<Developer>, IDeveloperService
             Tasks = await AssignedTaskToDeveloper(developer, cancellationToken)
         });
 
-        return content.OrderByDescending(x => x.Tasks.Count).ToList();
+        return content;
     }
 
     public async Task<OperationResult> AddOrUpdateDeveloper(DeveloperDto developerDto, CancellationToken cancellationToken = default)
@@ -111,7 +111,7 @@ public class DeveloperService : ManagementService<Developer>, IDeveloperService
         {
             case DeveloperType.Be:
                 var beTasks = await _managementDb.AssignedBetasks
-                    .Where(x => x.Developer == developer && x.TaskState == TaskState.Pending)
+                    .Where(x => x.Developer == developer /*&& x.TaskState == TaskState.Pending*/)
                     .Include(x => x.DevTask)
                     .ThenInclude(x => x.AssignedManager)
                     .ThenInclude(x => x.ProjectManager)
@@ -156,7 +156,7 @@ public class DeveloperService : ManagementService<Developer>, IDeveloperService
 
                 break;
         }
-        return list;
+        return list.OrderBy(x => x.TaskState).ToList();
     }
 
     public async Task<OperationResult> ChangeState(string developerId, CancellationToken cancellationToken = default)

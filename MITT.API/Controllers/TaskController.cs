@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MITT.API.Shared;
+using MITT.EmployeeDb.Models;
 using MITT.Services.Abstracts;
 using MITT.Services.TaskServices;
 
@@ -19,8 +20,8 @@ public class TaskController : BaseController
     }
 
     [HttpGet]
-    public async Task<List<TaskVm>> Tasks(string? projectId, string? developerId, bool activeOnly = true, CancellationToken cancellationToken = default)
-        => await _taskService.Tasks(projectId, developerId, activeOnly, cancellationToken);
+    public async Task<List<TaskVm>> Tasks(string? projectId, string? developerId, TaskState? taskState, CancellationToken cancellationToken = default)
+        => await _taskService.Tasks(projectId, developerId, taskState, cancellationToken);
 
     [HttpGet]
     public async Task<List<TaskNamesVm>> TaskNames(CancellationToken cancellationToken = default)
@@ -41,7 +42,6 @@ public class TaskController : BaseController
     public async Task<OperationResult> Complete(CompleteTaskDto completeTaskDto, CancellationToken cancellationToken = default)
         => await _taskService.CompleteTask(completeTaskDto, cancellationToken);
 
-
     [HttpPost]
     public async Task<OperationResult> Cancel(CancelTaskDto cancelTaskDto, CancellationToken cancellationToken = default)
         => await _taskService.CancelTask(cancelTaskDto, cancellationToken);
@@ -52,5 +52,4 @@ public class TaskController : BaseController
         AssignDevType.Be => await _taskAssignmentService.AssignBETask(assignTaskDto, cancellationToken),
         AssignDevType.Qa => await _taskAssignmentService.AssignQATask(assignTaskDto, cancellationToken),
     };
-
 }

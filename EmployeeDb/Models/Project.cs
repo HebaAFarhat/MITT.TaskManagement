@@ -33,5 +33,5 @@ public partial class Project : BaseEntity
 
 public enum ProjectType
 {
-    Mb, Py, Wb, Ot
+    MB, PY, WB, OT
 }

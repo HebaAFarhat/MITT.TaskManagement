@@ -48,8 +48,8 @@ public class ProjectsService : ManagementService<Project>, IProjectsService
         }
 
         return projectList
-            .OrderBy(x => x.Managers.Count)
-            .ThenBy(x => (int)x.ProjectType)
+            .OrderBy(x => (int)x.ProjectType)
+            .ThenByDescending(x => x.Managers.Count)
             .ToList();
     }
 
@@ -82,7 +82,7 @@ public class ProjectsService : ManagementService<Project>, IProjectsService
                 .Select(project => new ProjectDto
                 {
                     Id = project.Id.ToString(),
-                    Name = project.Name,
+                    Name = $"{project.ProjectType}  ==>  {project.Name}",
                     Description = project.Description,
                     ProjectType = project.ProjectType,
                 })
