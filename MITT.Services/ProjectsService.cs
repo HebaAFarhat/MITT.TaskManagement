@@ -43,6 +43,7 @@ public class ProjectsService : ManagementService<Project>, IProjectsService
                 Name = project.Name,
                 Description = project.Description,
                 ProjectType = project.ProjectType,
+                Bank = project.Bank,
                 Managers = managerList
             });
         }
