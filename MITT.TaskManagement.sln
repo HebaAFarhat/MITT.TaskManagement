@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MITT.GitLabClient", "MITT.G
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github", "Github", "{6C5AC44D-7939-4F13-8FD9-AB5CD92118CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.DoaminTests", "Tests.DoaminTests\Tests.DoaminTests.csproj", "{FC9D2097-D6D2-4E8B-B109-49B245A024AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUnit", "Tests.DoaminTests\TestUnit.csproj", "{FC9D2097-D6D2-4E8B-B109-49B245A024AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
