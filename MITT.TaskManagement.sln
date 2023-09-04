@@ -8,9 +8,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MITT.Services", "MITT.Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MITT.API", "MITT.API\MITT.API.csproj", "{1B31B15B-9A7B-4F68-A095-4098A66E1393}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{BAD31DC0-4BE1-444E-9256-8A753CC09192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{BAD31DC0-4BE1-444E-9256-8A753CC09192}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MITT.GitLabClient", "MITT.GitLabClient\MITT.GitLabClient.csproj", "{6B6514C8-00E5-46D3-8476-79C14E53D086}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MITT.GitLabClient", "MITT.GitLabClient\MITT.GitLabClient.csproj", "{6B6514C8-00E5-46D3-8476-79C14E53D086}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github", "Github", "{6C5AC44D-7939-4F13-8FD9-AB5CD92118CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.DoaminTests", "Tests.DoaminTests\Tests.DoaminTests.csproj", "{FC9D2097-D6D2-4E8B-B109-49B245A024AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +42,16 @@ Global
 		{6B6514C8-00E5-46D3-8476-79C14E53D086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B6514C8-00E5-46D3-8476-79C14E53D086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B6514C8-00E5-46D3-8476-79C14E53D086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC9D2097-D6D2-4E8B-B109-49B245A024AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC9D2097-D6D2-4E8B-B109-49B245A024AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC9D2097-D6D2-4E8B-B109-49B245A024AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC9D2097-D6D2-4E8B-B109-49B245A024AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B6514C8-00E5-46D3-8476-79C14E53D086} = {6C5AC44D-7939-4F13-8FD9-AB5CD92118CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
