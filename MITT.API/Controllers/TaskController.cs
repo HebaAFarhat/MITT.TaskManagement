@@ -29,7 +29,7 @@ public class TaskController : BaseController
 
     [HttpPost]
     public async Task<OperationResult> AddTask(TaskDto taskDto, CancellationToken cancellationToken = default)
-        => await _taskService.AddTask(taskDto, cancellationToken);
+        => await _taskService.AddTask(taskDto, false, cancellationToken);
 
     [HttpPost]
     public async Task<OperationResult> AddReview(AddReviewDto addReviewDto, CancellationToken cancellationToken = default) => addReviewDto.AssignDevType switch

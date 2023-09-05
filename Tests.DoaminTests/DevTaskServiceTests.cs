@@ -58,7 +58,7 @@ internal class DevTaskServiceTests : BaseTestsService
             EndDate = DateTime.Now,
             MainBranch = "Test",
             MergeBranch = "Test",
-            Requirements = new List<string> { "Test" },
+            Requirements = new List<string> { "Test" }
         };
 
         // Act
@@ -70,8 +70,8 @@ internal class DevTaskServiceTests : BaseTestsService
         _dbContext.SaveChanges();
         newTask.AssignedManagerId = _dbContext.AssignedManagers.First().Id.ToString();
 
-        var devTaskController = new TaskController(new TaskService(_dbContext), new AssignmentService(_dbContext), new ReviewService(_dbContext));
-        var newTaskResult = devTaskController.AddTask(newTask).Result;
+        var taskService = new TaskService(_dbContext);
+        var newTaskResult = taskService.AddTask(newTask, true).Result;
 
         // Assert
         Assert.Multiple(() =>
