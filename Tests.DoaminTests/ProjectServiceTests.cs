@@ -9,52 +9,9 @@ using Moq;
 
 namespace TestUnit;
 
-[TestFixture]
-public class ProjectServiceTests
+[TestFixture, Order(1)]
+public class ProjectServiceTests : BaseTestsService
 {
-    private DbContextOptions<ManagementDb> _options;
-    private ManagementDb _dbContext;
-    private ProjectsController _controller;
-
-    private readonly List<Project> SeedData = new()
-    {
-        Project.Create(Bank.Jumhoria.ToString(), ProjectType.OT.ToString(), ProjectType.OT, Bank.Jumhoria),
-        Project.Create(Bank.Wahda.ToString(), ProjectType.MB.ToString(), ProjectType.MB, Bank.Wahda),
-    };
-
-    [SetUp]
-    public void Setup()
-    {
-        // Set up an in-memory database for testing
-        _options = new DbContextOptionsBuilder<ManagementDb>()
-            .UseInMemoryDatabase(databaseName: $"{nameof(ManagementDb)}-Test")
-            .Options;
-        _dbContext = new ManagementDb(_options);
-
-        // Seed test data
-        _dbContext.Projects.AddRange(SeedData);
-        _dbContext.SaveChanges();
-
-        _controller = new ProjectsController(new ProjectsService(_dbContext), new ManagerService(_dbContext));
-    }
-
-    [Test]
-    public void GetProjectsReturnValueOrEmptyList()
-    {
-        // Act
-        var result = _controller.Projects().Result;
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<List<ProjectVm>>());
-        Assert.That(result, Has.Count.EqualTo(2));
-        Assert.Multiple(() =>
-        {
-            Assert.That(result[0].Name, Is.EqualTo(Bank.Wahda.ToString()));
-            Assert.That(result[1].Name, Is.EqualTo(Bank.Jumhoria.ToString()));
-        });
-    }
-
     [Test]
     public void Add_ValidAddOrUpdateProject()
     {
@@ -68,7 +25,8 @@ public class ProjectServiceTests
         };
 
         // Act
-        _controller.AddOrUpdateProject(newProject).Wait();
+        var controller = new ProjectsController(new ProjectsService(_dbContext), new ManagerService(_dbContext));
+        controller.AddOrUpdateProject(newProject).Wait();
         var result = _dbContext.Projects.FirstOrDefault(e => e.Bank == newProject.Bank);
 
         // Assert
@@ -81,42 +39,10 @@ public class ProjectServiceTests
     }
 
     [Test]
-    public void Add_FailedAddOrUpdateProjectWhenBankAndTypeDuplicate()
+    public void Add_ValidAssignManagersToProject()
     {
         // Arrange
-        var newProject = new ProjectDto
-        {
-            Bank = Bank.Wahda,
-            ProjectType = ProjectType.MB,
-            Description = "Test",
-            Name = "TestName"
-        };
-
-        // Act
-        var dataResult = _controller.AddOrUpdateProject(newProject).Result;
-
-        // Assert
-        Assert.That(dataResult, Is.Not.Null);
-        Assert.That(dataResult, Is.InstanceOf<OperationResult>());
-        Assert.That(dataResult.Type, Is.EqualTo(OperationResult.ResultType.Failure));
-    }
-
-    [Test]
-    public void GetManagersReturnValue()
-    {
-        // Act
-        var result = _controller.Managers().Result;
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<List<ProjectManagerVm>>());
-        Assert.That(result, Has.Count.AtMost(1));
-    }
-
-    [Test]
-    public void Add_ValidAddOrUpdateManager()
-    {
-        // Arrange
+        AssignManagersDto assignManagersDto = new() { ManagerIds = new List<string>() };
         var newManager = new ProjectManagerDto
         {
             FullName = "abdalsalam aweid",
@@ -126,24 +52,62 @@ public class ProjectServiceTests
         };
 
         // Act
+        var _controller = new ProjectsController(new ProjectsService(_dbContext), new ManagerService(_dbContext));
         var valueResult = _controller.AddOrUpdateManager(newManager).Result;
-        var result = _dbContext.Managers.FirstOrDefault(e => e.NickName == "absy");
+
+        var manager = _dbContext.Managers.FirstOrDefault(e => e.NickName == "absy") ?? throw new Exception("manager returned null!!");
+        Project project = Project.Create("name", "nickname", ProjectType.MB, Bank.Ismali);
+        _dbContext.AssignedManagers.Add(AssignedManager.Create(project, manager));
+        _dbContext.SaveChanges();
+
+        assignManagersDto.ManagerIds.Add(manager.Id.ToString());
+        assignManagersDto.ProjectId = project.Id.ToString();
+
+        var controller = new ProjectsController(new ProjectsService(_dbContext), new ManagerService(_dbContext));
+        var result = controller.AssignManagersToProject(assignManagersDto).Result;
 
         // Assert
+        Assert.That(manager, Is.Not.Null);
+        Assert.That(result.Type, Is.EqualTo(OperationResult.ResultType.Success));
         Assert.Multiple(() =>
         {
-            Assert.That(result, Is.Not.Null);
-            Assert.That(valueResult, Is.TypeOf<OperationResult>());
-            Assert.That(result.NickName, Is.EqualTo(newManager.NickName));
-            Assert.That(result.Phone, Is.EqualTo(newManager.Phone));
+            Assert.That(project, Is.Not.Null);
+
+            Assert.That(result, Is.InstanceOf<OperationResult>());
         });
     }
 
-    [TearDown]
-    public void TearDown()
+    [Test]
+    public void Add_FailedAddOrUpdateProjectWhenBankAndTypeDuplicate()
     {
-        // Clean up the in-memory database after each test
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        // Arrange
+        var firstProject = new ProjectDto
+        {
+            Bank = Bank.Wahda,
+            ProjectType = ProjectType.MB,
+            Description = "Test",
+            Name = "TestName"
+        };
+        var secondProject = new ProjectDto
+        {
+            Bank = Bank.Wahda,
+            ProjectType = ProjectType.MB,
+            Description = "Test",
+            Name = "TestName"
+        };
+
+        // Act
+        var controller = new ProjectsController(new ProjectsService(_dbContext), new ManagerService(_dbContext));
+        var firstDataResult = controller.AddOrUpdateProject(firstProject).Result;
+        var secondDataResult = controller.AddOrUpdateProject(secondProject).Result;
+
+        // Assert
+        Assert.That(firstDataResult, Is.Not.Null);
+        Assert.That(firstDataResult, Is.InstanceOf<OperationResult>());
+        Assert.That(firstDataResult.Type, Is.EqualTo(OperationResult.ResultType.Success));
+
+        Assert.That(secondDataResult, Is.Not.Null);
+        Assert.That(secondDataResult, Is.InstanceOf<OperationResult>());
+        Assert.That(secondDataResult.Type, Is.EqualTo(OperationResult.ResultType.Failure));
     }
 }
