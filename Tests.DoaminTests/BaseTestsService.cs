@@ -11,7 +11,7 @@ public enum RunType
 
 public static class TestConfig
 {
-    public static RunType RunType = RunType.SqlServer;
+    public static RunType RunType = RunType.InMemory;
 }
 
 [TestFixture]
