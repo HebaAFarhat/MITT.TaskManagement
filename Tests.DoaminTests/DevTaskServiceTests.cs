@@ -94,7 +94,7 @@ internal class DevTaskServiceTests : BaseTestsService
         };
 
         // Act
-        var assignedManager = AssignedManager.Create(Project.Create("", "", ProjectType.OT, Bank.NorthAfrica), Manager.Create("", "", "", ""));
+        var assignedManager = AssignedManager.Create(Project.Create("name", "description", ProjectType.OT, Bank.NorthAfrica), Manager.Create("name", "nick-name", "email", "phone"));
         _dbContext.AssignedManagers.Add(assignedManager);
         DevTask devTask = DevTask.Create("seq",
                                          "name",

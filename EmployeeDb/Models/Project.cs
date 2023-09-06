@@ -16,18 +16,19 @@ public partial class Project : BaseEntity
 
     public virtual ICollection<AssignedManager> AssignedManagers { get; set; }
 
-    public static Project Create(string name, string description, ProjectType projectType)
+    public static Project Create(string name, string description, ProjectType projectType, Bank bank)
     {
         name = Guard.Against.NullOrEmpty(name, nameof(name), "Name_cannot_be_null_or_empty");
-        description = Guard.Against.NullOrEmpty(description,nameof(description),"Description_cannot_be_null_OR_empty");
-        projectType = Guard.Against.EnumOutOfRange(projectType,nameof(projectType),"project_type_out_range");
-            
+        description = Guard.Against.NullOrEmpty(description, nameof(description), "Description_cannot_be_null_OR_empty");
+        projectType = Guard.Against.EnumOutOfRange(projectType, nameof(projectType), "project_type_out_range");
+
         return new Project
         {
             Id = Guid.NewGuid(),
             Name = name,
             Description = description,
             ProjectType = projectType,
+            Bank = bank,
             CreatedAt = DateTime.Now
         };
     }
@@ -35,9 +36,9 @@ public partial class Project : BaseEntity
     public void Update(string name, string description, ProjectType projectType, Bank bank)
     {
         name = Guard.Against.NullOrEmpty(name, nameof(name), "Name_cannot_be_null_or_empty");
-        description = Guard.Against.NullOrEmpty(description,nameof(description),"Description_cannot_be_null_OR_empty");
-        projectType = Guard.Against.EnumOutOfRange(projectType,nameof(projectType),"project_type_out_range");
-        
+        description = Guard.Against.NullOrEmpty(description, nameof(description), "Description_cannot_be_null_OR_empty");
+        projectType = Guard.Against.EnumOutOfRange(projectType, nameof(projectType), "project_type_out_range");
+
         Name = name;
         Description = description;
         ProjectType = projectType;
@@ -48,15 +49,15 @@ public partial class Project : BaseEntity
 
 public enum ProjectType
 {
-    MB , PY, WB, OT
+    MB, PY, WB, OT
 }
 
 public enum Bank
 {
-    NorthAfrica = 10, 
-    Wahda = 20, 
-    Tejari = 30, 
-    Jumhoria = 40, 
+    NorthAfrica = 10,
+    Wahda = 20,
+    Tejari = 30,
+    Jumhoria = 40,
     Ismali = 50,
-    Sahara = 60, 
+    Sahara = 60,
 }
