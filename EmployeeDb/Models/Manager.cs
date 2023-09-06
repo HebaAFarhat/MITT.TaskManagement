@@ -2,7 +2,7 @@
 {
     public partial class Manager : Identity
     {
-        public Manager()
+        public Manager(string fullName,string nickName,string email ,string phone ) : base(fullName,nickName,email,phone)
         {
             Id = Guid.NewGuid();
             CreatedAt = DateTime.Now;
@@ -13,7 +13,7 @@
 
         public virtual ICollection<AssignedManager> AssignedManagers { get; private set; } = new HashSet<AssignedManager>();
 
-        public static Manager Create(string fullName, string nickName, string email, string phone) => new()
+        public static Manager Create(string fullName, string nickName, string email, string phone) => new( fullName, nickName, email , phone ) 
         {
             Id = Guid.NewGuid(),
             FullName = fullName,
