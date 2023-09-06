@@ -1,5 +1,7 @@
 ﻿namespace MITT.EmployeeDb.Models
 {
+
+
     public partial class DevTask : BaseEntity
     {
         public DevTask()

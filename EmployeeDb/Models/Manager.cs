@@ -1,6 +1,6 @@
 ﻿namespace MITT.EmployeeDb.Models
 {
-    public partial class Manager : Identity
+    public partial class Manager : Employee
     {
         public Manager()
         {
@@ -8,8 +8,7 @@
             CreatedAt = DateTime.Now;
         }
 
-        public string Image { get; private set; }
-        public ActiveState ActiveState { get; set; } = ActiveState.Active;
+       
 
         public virtual ICollection<AssignedManager> AssignedManagers { get; private set; } = new HashSet<AssignedManager>();
 

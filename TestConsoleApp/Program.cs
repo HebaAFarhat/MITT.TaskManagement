@@ -14,6 +14,7 @@ foreach (var project in projects)
     var tags = await gitLabClient.GetProjectTags(projectId: project.Id.ToString());
 }
 
+
 var issues = await gitLabClient.Issues();
 
 Console.ReadLine();

@@ -22,15 +22,15 @@ public class AuthService : IAuthService
     {
         try
         {
-            var identity = await _managementDb.GetIdentity(signInDto.Phone, cancellationToken);
+            var employee = await _managementDb.GetEmployee(signInDto.Phone, cancellationToken);
 
-            if (identity.identity.IsSigned)
-                if (!signInDto.Pin.Verify(identity.identity.Pin)) throw new Exception("invalid_data_provided!!");
+            if (employee.employee.IsSigned)
+                if (!signInDto.Pin.Verify(employee.employee.Pin)) throw new Exception("invalid_data_provided!!");
 
             var token = _jwtTokenBuilder
-                .AddId(identity.identity.Id.ToString())
-                .AddIdentity(identity.identity.Phone)
-                .AddTag((int)identity.type)
+                .AddId(employee.employee.Id.ToString())
+                .AddIdentity(employee.employee.Phone)
+                .AddTag((int)employee.type)
                 .Build();
 
             return OperationResult<JwtToken>.Valid(token);
@@ -60,7 +60,7 @@ public class AuthService : IAuthService
     {
         try
         {
-            var identity = await _managementDb.GetIdentity(phone, cancellationToken);
+            var identity = await _managementDb.GetEmployee(phone, cancellationToken);
             string @default = Hasher.GenerateDefaultPassword();
 
             if (identity.type == DeveloperType.Pm)
@@ -114,7 +114,7 @@ public class AuthService : IAuthService
 
 public static class Ext
 {
-    public static async Task<(Identity identity, DeveloperType type)> GetIdentity(this ManagementDb managementDb, string phone, CancellationToken cancellationToken)
+    public static async Task<(Employee employee, DeveloperType type)> GetEmployee(this ManagementDb managementDb, string phone, CancellationToken cancellationToken)
     {
         var developer = await managementDb.GetDeveloper(phone, cancellationToken);
         if (developer is not null) return (developer, developer.Type);

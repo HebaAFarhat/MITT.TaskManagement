@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MITT.EmployeeDb.Models;
 using Newtonsoft.Json;
+using System.Security.Principal;
 
 namespace MITT.EmployeeDb
 {
@@ -14,7 +15,7 @@ namespace MITT.EmployeeDb
         public ManagementDb(DbContextOptions<ManagementDb> options) : base(options)
         {
         }
-
+        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<AssignedBeTask> AssignedBetasks { get; set; }
         public virtual DbSet<AssignedManager> AssignedManagers { get; set; }
         public virtual DbSet<AssignedQaTask> AssignedQatasks { get; set; }
@@ -130,6 +131,11 @@ namespace MITT.EmployeeDb
                     .HasForeignKey(d => d.AssignedManagerId);
             });
             modelBuilder.HasSequence("Sequence-Generator", "SequenceGenerator");
+
+            modelBuilder.Entity<Employee>()
+            .HasDiscriminator<string>("EmployeeType")
+            .HasValue<Developer>("Developer")
+            .HasValue<Manager>("Manager");
         }
 
         private static string MapSeqNumber(string seqNumber, int padding = 5, char paddingValue = '0')

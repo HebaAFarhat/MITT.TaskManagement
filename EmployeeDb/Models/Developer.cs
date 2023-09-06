@@ -1,6 +1,6 @@
 ﻿namespace MITT.EmployeeDb.Models
 {
-    public partial class Developer : Identity
+    public partial class Developer : Employee
     {
         public Developer()
         {
@@ -9,7 +9,7 @@
         }
 
         public DeveloperType Type { get; set; }
-        public string Image { get; set; }
+        
         public ActiveState ActiveState { get; set; } = ActiveState.Active;
         public virtual ICollection<AssignedBeTask> AssignedBetasks { get; set; }
         public virtual ICollection<AssignedQaTask> AssignedQatasks { get; set; }
