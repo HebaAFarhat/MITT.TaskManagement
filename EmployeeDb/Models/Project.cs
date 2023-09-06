@@ -12,6 +12,7 @@ public partial class Project : BaseEntity
     public string Name { get; private set; }
     public string Description { get; private set; }
     public ProjectType ProjectType { get; private set; }
+    public Bank Bank { get; private set; }
 
     public virtual ICollection<AssignedManager> AssignedManagers { get; set; }
 
@@ -31,7 +32,7 @@ public partial class Project : BaseEntity
         };
     }
 
-    public void Update(string name, string description, ProjectType projectType)
+    public void Update(string name, string description, ProjectType projectType, Bank bank)
     {
         name = Guard.Against.NullOrEmpty(name, nameof(name), "Name_cannot_be_null_or_empty");
         description = Guard.Against.NullOrEmpty(description,nameof(description),"Description_cannot_be_null_OR_empty");
@@ -41,10 +42,21 @@ public partial class Project : BaseEntity
         Description = description;
         ProjectType = projectType;
         UpdatedAt = DateTime.Now;
+        Bank = bank;
     }
 }
 
 public enum ProjectType
 {
-    MB, PY, WB, OT
+    MB , PY, WB, OT
+}
+
+public enum Bank
+{
+    NorthAfrica = 10, 
+    Wahda = 20, 
+    Tejari = 30, 
+    Jumhoria = 40, 
+    Ismali = 50,
+    Sahara = 60, 
 }

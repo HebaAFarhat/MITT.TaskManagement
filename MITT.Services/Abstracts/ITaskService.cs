@@ -8,7 +8,7 @@ public interface ITaskService
 
     Task<List<TaskNamesVm>> TaskNames(CancellationToken cancellationToken = default);
 
-    Task<OperationResult> AddTask(TaskDto taskDto, CancellationToken cancellationToken = default);
+    Task<OperationResult> AddTask(TaskDto taskDto, bool mocking = false, CancellationToken cancellationToken = default);
 
     Task<OperationResult> CompleteTask(CompleteTaskDto completeTaskDto, CancellationToken cancellationToken = default);
 

@@ -43,6 +43,7 @@ public class ProjectsService : ManagementService<Project>, IProjectsService
                 Name = project.Name,
                 Description = project.Description,
                 ProjectType = project.ProjectType,
+                Bank = project.Bank,
                 Managers = managerList
             });
         }
@@ -57,18 +58,23 @@ public class ProjectsService : ManagementService<Project>, IProjectsService
     {
         if (string.IsNullOrEmpty(projectDto.Id))
         {
-            var entity = Project.Create(projectDto.Name, projectDto.Description, projectDto.ProjectType);
+            var alreadyExist = await _managementDb.Projects.AnyAsync(p => p.Bank == projectDto.Bank && p.ProjectType == projectDto.ProjectType, cancellationToken: cancellationToken);
+            if (alreadyExist) return OperationResult.UnValid(messages: new string[] { "bank_project_combination_taken" });
+
+            var entity = Project.Create(projectDto.Name, projectDto.Description, projectDto.ProjectType, projectDto.Bank);
 
             await Add(entity, cancellationToken);
 
             return OperationResult.Valid();
         }
 
+        var isDuplicate = await _managementDb.Projects.AnyAsync(p => p.Bank == projectDto.Bank && p.ProjectType == projectDto.ProjectType && p.Id.ToString() != projectDto.Id, cancellationToken: cancellationToken);
+        if (isDuplicate) return OperationResult.UnValid(messages: new string[] { $"bank_project_combination_taken!!" });
+
         var project = await _managementDb.Projects.FirstOrDefaultAsync(x => x.Id == Guid.Parse(projectDto.Id), cancellationToken);
+        if (project is null) return OperationResult.UnValid(messages: new string[] { $"invalid_{project}_id!!" });
 
-        if (project is null) throw new Exception($"invalid_{project}_id!!");
-
-        project.Update(projectDto?.Name, projectDto?.Description, projectDto.ProjectType);
+        project.Update(projectDto.Name, projectDto.Description, projectDto.ProjectType, projectDto.Bank);
 
         await Update(project, cancellationToken);
         return OperationResult.Valid();

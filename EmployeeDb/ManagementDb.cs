@@ -114,7 +114,9 @@ namespace MITT.EmployeeDb
 
             modelBuilder.Entity<Project>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever();
+                entity.HasIndex(x => new { x.Bank, x.ProjectType }).IsUnique();
             });
 
             modelBuilder.Entity<DevTask>(entity =>
