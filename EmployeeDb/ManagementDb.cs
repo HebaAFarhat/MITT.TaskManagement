@@ -30,7 +30,7 @@ namespace MITT.EmployeeDb
             optionsBuilder.UseSqlServer("Data Source =.; Initial Catalog = ManagementDb; Trusted_Connection = true;TrustServerCertificate=True;");
         }
 
-        public async Task<string> GenerateSequance(ProjectType prefix = ProjectType.MB, bool withPrefix = true)
+        public async Task<string> GenerateSequence(ProjectType prefix = ProjectType.MB, bool withPrefix = true)
         {
             var result = new SqlParameter("@result", System.Data.SqlDbType.BigInt)
             {
@@ -114,7 +114,9 @@ namespace MITT.EmployeeDb
 
             modelBuilder.Entity<Project>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever();
+                entity.HasIndex(x => new { x.Bank, x.ProjectType }).IsUnique();
             });
 
             modelBuilder.Entity<DevTask>(entity =>

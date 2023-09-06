@@ -40,11 +40,11 @@ public class TaskService : ManagementService<DevTask>, ITaskService
             TaskState = task.TaskState,
             AssignedProjectId = task.AssignedManager.ProjectId.ToString(),
             AssignedProjectName = task.AssignedManager.Project.Name,
-            AssignedBeDevs = await GetAssignedBeDevs(task.Id),
-            AssignedQaDevs = await GetAssignedQaDevs(task),
             TimeLeft = string.Empty,
             Progress = string.Empty,
-            TimeAllow = 0
+            TimeAllow = 0,
+            AssignedBeDevs = await GetAssignedBeDevs(task.Id),
+            AssignedQaDevs = await GetAssignedQaDevs(task),
         });
 
         return list.OrderBy(x => x.TaskState)
@@ -74,7 +74,7 @@ public class TaskService : ManagementService<DevTask>, ITaskService
             .Include(x => x.Project)
             .FirstOrDefaultAsync(x => x.Id == Guid.Parse(taskDto.AssignedManagerId), cancellationToken) ?? throw new Exception($"invalid_manager_id!!");
 
-        var seqNo = await _managementDb.GenerateSequance(manager.Project.ProjectType);
+        var seqNo = await _managementDb.GenerateSequence(manager.Project.ProjectType);
 
         var entity = DevTask.Create(seqNo,
                                     taskDto.Name,

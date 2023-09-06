@@ -17,6 +17,7 @@ public class ProjectDto
     public string Name { get; set; }
     public string Description { get; set; }
     public ProjectType ProjectType { get; set; }
+    public Bank Bank { get; set; }
 }
 
 public class ProjectVm : ProjectDto

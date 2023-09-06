@@ -56,31 +56,6 @@ public class AuthService : IAuthService
         return OperationResult.UnValid(messages: new string[] { "invalid_data_provided!!" });
     }
 
-    private async Task<OperationResult> ChangeManagerPin(ChangePinDto changePinDto, Developer developer, Manager manager, CancellationToken cancellationToken)
-    {
-        if (developer.IsSigned)
-            if (!changePinDto.Pin.Verify(manager.Pin)) throw new Exception("invalid_data_provided!!");
-
-        manager.Pin = changePinDto.NewPin.Hash();
-        manager.IsSigned = true;
-        _managementDb.Managers.Update(manager);
-        await _managementDb.SaveChangesAsync(cancellationToken);
-        return OperationResult.Valid();
-    }
-
-    private async Task<OperationResult> ChangeDevPin(ChangePinDto changePinDto, Developer developer, CancellationToken cancellationToken)
-    {
-        if (developer.IsSigned)
-            if (!changePinDto.Pin.Verify(developer.Pin)) throw new Exception("invalid_data_provided!!");
-
-        developer.Pin = changePinDto.NewPin.Hash();
-        developer.IsSigned = true;
-
-        _managementDb.Developers.Update(developer);
-        await _managementDb.SaveChangesAsync(cancellationToken);
-        return OperationResult.Valid();
-    }
-
     public async Task<OperationResult> ResetPin(string phone, CancellationToken cancellationToken)
     {
         try
@@ -109,6 +84,31 @@ public class AuthService : IAuthService
         {
             return OperationResult<JwtToken>.UnValid(messages: new string[] { e.Message });
         }
+    }
+
+    private async Task<OperationResult> ChangeManagerPin(ChangePinDto changePinDto, Developer developer, Manager manager, CancellationToken cancellationToken)
+    {
+        if (developer.IsSigned)
+            if (!changePinDto.Pin.Verify(manager.Pin)) throw new Exception("invalid_data_provided!!");
+
+        manager.Pin = changePinDto.NewPin.Hash();
+        manager.IsSigned = true;
+        _managementDb.Managers.Update(manager);
+        await _managementDb.SaveChangesAsync(cancellationToken);
+        return OperationResult.Valid();
+    }
+
+    private async Task<OperationResult> ChangeDevPin(ChangePinDto changePinDto, Developer developer, CancellationToken cancellationToken)
+    {
+        if (developer.IsSigned)
+            if (!changePinDto.Pin.Verify(developer.Pin)) throw new Exception("invalid_data_provided!!");
+
+        developer.Pin = changePinDto.NewPin.Hash();
+        developer.IsSigned = true;
+
+        _managementDb.Developers.Update(developer);
+        await _managementDb.SaveChangesAsync(cancellationToken);
+        return OperationResult.Valid();
     }
 }
 
