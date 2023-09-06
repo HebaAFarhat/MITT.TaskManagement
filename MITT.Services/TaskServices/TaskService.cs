@@ -74,7 +74,7 @@ public class TaskService : ManagementService<DevTask>, ITaskService
             .Include(x => x.Project)
             .FirstOrDefaultAsync(x => x.Id == Guid.Parse(taskDto.AssignedManagerId), cancellationToken) ?? throw new Exception($"invalid_manager_id!!");
 
-        var seqNo = mocking ? $"SEQ{Random.Shared.Next(1, 99999)}" : await _managementDb.GenerateSequence(manager.Project.ProjectType);
+        var seqNo = mocking ? $"SEQ{Random.Shared.Next(1, 99999)}" : await _managementDb.GenerateSequance(manager.Project.ProjectType);
 
         var entity = DevTask.Create(seqNo,
                                     taskDto.Name,
