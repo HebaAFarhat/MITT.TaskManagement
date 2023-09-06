@@ -1,4 +1,6 @@
-﻿namespace MITT.EmployeeDb.Models
+﻿using Ardalis.GuardClauses;
+
+namespace MITT.EmployeeDb.Models
 {
     public partial class QaReview : BaseEntity
     {
@@ -10,7 +12,12 @@
             Findings = findings;
         }
 
-        public static QaReview Create(AssignedQaTask assigned, List<ReviewFinding> findings) => new(assigned, findings);
+        public static QaReview Create(AssignedQaTask assigned, List<ReviewFinding> findings)
+        {
+            findings = Guard.Against.Null(findings, nameof(findings), "Findings_cannot_be_null"); 
+            
+            return new(assigned, findings);
+        }
 
         public Guid AssignedQaTaskId { get; set; }
         public List<ReviewFinding> Findings { get; set; }
