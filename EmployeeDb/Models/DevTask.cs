@@ -1,4 +1,6 @@
-﻿namespace MITT.EmployeeDb.Models
+﻿using Ardalis.GuardClauses;
+
+namespace MITT.EmployeeDb.Models
 {
 
 
@@ -37,26 +39,42 @@
                                      DateTime endDate,
                                      ImplementationType implementationType,
                                      List<string> requirements,
-                                     Guid assignedManagerId) => new()
-                                     {
-                                         Id = Guid.NewGuid(),
-                                         CreatedAt = DateTime.Now,
-                                         SeqNo = seqNo,
-                                         Name = name,
-                                         Description = description,
-                                         MainBranch = mainBranch,
-                                         MergeBranch = mergeBranch,
-                                         StartDate = startDate,
-                                         EndDate = endDate,
-                                         ImplementationType = implementationType,
-                                         Requirements = requirements,
-                                         AssignedManagerId = assignedManagerId,
-                                         TaskState = TaskState.Pending,
-                                     };
+                                     Guid assignedManagerId)
+        {
+             Guard.Against.EnumOutOfRange(implementationType,nameof(implementationType),"Enum_out_of_range");
+             Guard.Against.NullOrEmpty(name, nameof(name), "Name_cannot_be_null_or_empty");
+             Guard.Against.Null(description, nameof(description), "Description_cannot_be_null");
+             Guard.Against.NullOrEmpty(mainBranch, nameof(mainBranch), "MainBranch_cannot_be_null_or_empty");
+             Guard.Against.NullOrEmpty(mergeBranch, nameof(mergeBranch), "MergeBranch_cannot_be_null_or_empty");
+             Guard.Against.Null(requirements,nameof(requirements),"Requirements_cannot_be_null");
+                
+            return new()
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                SeqNo = seqNo,
+                Name = name,
+                Description = description,
+                MainBranch = mainBranch,
+                MergeBranch = mergeBranch,
+                StartDate = startDate,
+                EndDate = endDate,
+                ImplementationType = implementationType,
+                Requirements = requirements,
+                AssignedManagerId = assignedManagerId,
+                TaskState = TaskState.Pending,
+            };
+        }
 
-        public void AddQaDevelopers(List<Developer> developers) => developers.ForEach(developer => AssignedQatasks.Add(AssignedQaTask.Create(this, developer)));
+        public void AddQaDevelopers(List<Developer> developers)
+        {
+            developers.ForEach(developer => AssignedQatasks.Add(AssignedQaTask.Create(this, developer)));
+        }
 
-        public void AddBeDevelopers(List<Developer> developers) => developers.ForEach(developer => AssignedBetasks.Add(AssignedBeTask.Create(this, developer)));
+        public void AddBeDevelopers(List<Developer> developers)
+        {
+            developers.ForEach(developer => AssignedBetasks.Add(AssignedBeTask.Create(this, developer)));
+        }
     }
 
     public enum TaskState
